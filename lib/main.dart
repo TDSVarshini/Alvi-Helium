@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'l10n.dart';
-import 'screens/onboarding.dart';
+import 'screens/onboarding_updated.dart';
 import 'screens/shell.dart';
 import 'state/app_state.dart';
 import 'state/health_store.dart';
@@ -16,17 +16,21 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('en_CA');
   await initializeDateFormatting('fr_CA');
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent));
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+  );
   final prefs = await SharedPreferences.getInstance();
   final health = HealthStore(prefs);
   final app = AppState(prefs, health)..load();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider.value(value: app),
-      ChangeNotifierProvider.value(value: health),
-    ],
-    child: const HeliumApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: app),
+        ChangeNotifierProvider.value(value: health),
+      ],
+      child: const HeliumApp(),
+    ),
+  );
 }
 
 class HeliumApp extends StatelessWidget {

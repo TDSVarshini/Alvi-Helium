@@ -323,9 +323,10 @@ class AccountStep extends StatelessWidget {
         children: [
           accountButton(
             label: context.t('Continue with Apple', 'Continuer avec Apple'),
-            icon: const Text(
-              '',
-              style: TextStyle(fontSize: 23, color: Colors.white),
+            icon: const Icon(
+              Icons.apple,
+              color: Colors.white,
+              size: 23,
             ),
             filled: true,
             onTap: () => unavailable('Apple'),

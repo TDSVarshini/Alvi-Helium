@@ -248,90 +248,105 @@ class PrivacyStep extends StatelessWidget {
       eyebrow: context.t('PRIVACY', 'CONFIDENTIALITÉ'),
       title: context.t('Your body.\nYour data.', 'Votre corps.\nVos données.'),
       subtitle: context.t(
-        'Helium has no account and no cloud. Everything stays on this phone unless you export it.',
-        'Helium n’a ni compte ni nuage. Tout reste sur ce téléphone, sauf si vous l’exportez.',
+        'You decide what Helium keeps. Change any choice later in You › Privacy.',
+        'Vous décidez de ce que Helium conserve. Modifiez vos choix plus tard dans Vous › Confidentialité.',
       ),
-      footer: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            context.t(
-              'Consent under PIPEDA and Québec Law 25. Privacy officer: [CONTACT]. Read the full Privacy Policy.',
-              'Consentement selon la LPRPDE et la Loi 25 du Québec. Responsable de la protection : [CONTACT]. Lire la Politique complète.',
-            ),
-            style: He.sans(14.5, color: He.ink3, height: 1.45),
-          ),
-          const SizedBox(height: 18),
-          PillButton(
-            context.t('I agree', 'J’accepte'),
-            onTap: () {
-              app.save();
-              _push(context, const AboutYouStep());
-            },
-          ),
-        ],
+      footer: PillButton(
+        context.t('Continue', 'Continuer'),
+        onTap: () {
+          app.save();
+          _push(context, const AboutYouStep());
+        },
       ),
       children: const [PrivacyChoices()],
     );
   }
 }
 
-/// What Helium stores and where; reused from You › Privacy and data.
+/// Privacy choices shown during onboarding and in You › Privacy.
 class PrivacyChoices extends StatelessWidget {
   const PrivacyChoices({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Widget row(String title, String sub, {String? tag}) => Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: He.hairline)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: title, style: He.sans(19)),
-                if (tag != null)
-                  TextSpan(text: '   $tag', style: He.eyebrow(size: 11.5)),
-              ],
-            ),
+    final app = context.watch<AppState>();
+    final p = app.prefs;
+
+    Widget choice(String title, String sub, {String? tag, Widget? control}) =>
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: He.hairline)),
           ),
-          const SizedBox(height: 3),
-          Text(sub, style: He.sans(15, color: He.ink3)),
-        ],
-      ),
-    );
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(text: title, style: He.sans(19)),
+                          if (tag != null)
+                            TextSpan(
+                              text: '   $tag',
+                              style: He.eyebrow(size: 11.5),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(sub, style: He.sans(15, color: He.ink3)),
+                  ],
+                ),
+              ),
+              if (control != null) ...[const SizedBox(width: 12), control],
+            ],
+          ),
+        );
+
     return Column(
       children: [
         const Hairline(),
-        row(
+        choice(
           context.t('Health signals', 'Signaux de santé'),
           context.t(
-            'Heart, sleep, motion and temperature from your band, needed for your insights',
-            'Cœur, sommeil, mouvement et température du bracelet, nécessaires à vos analyses',
+            'Heart, sleep, motion and temperature, needed for your insights',
+            'Cœur, sommeil, mouvement et température, nécessaires à vos analyses',
           ),
           tag: context.t('REQUIRED', 'REQUIS'),
         ),
-        row(
+        choice(
+          context.t('Product improvement', 'Amélioration du produit'),
           context.t(
-            'Nothing leaves your phone',
-            'Rien ne quitte votre téléphone',
+            'De-identified data to improve accuracy',
+            'Données dépersonnalisées pour améliorer la précision',
           ),
-          context.t(
-            'No account, no analytics, no uploads. Weather uses your rough location only.',
-            'Aucun compte, aucune analyse, aucun envoi. La météo utilise seulement votre position approximative.',
+          control: Switch.adaptive(
+            value: p.productImprovement,
+            activeColor: He.ink,
+            onChanged: (value) {
+              p.productImprovement = value;
+              app.save();
+            },
           ),
         ),
-        row(
-          context.t('You hold the backup', 'Vous gardez la sauvegarde'),
+        choice(
+          context.t('Research', 'Recherche'),
           context.t(
-            'Export a file in You › Privacy and data to move to a new phone.',
-            'Exportez un fichier dans Vous › Confidentialité pour changer de téléphone.',
+            'Future wellness studies. We’ll ask before each one',
+            'Futures études sur le bien-être. Nous demanderons votre accord avant chacune.',
+          ),
+          control: Switch.adaptive(
+            value: p.research,
+            activeColor: He.ink,
+            onChanged: (value) {
+              p.research = value;
+              app.save();
+            },
           ),
         ),
         const SizedBox(height: 22),
@@ -342,10 +357,7 @@ class PrivacyChoices extends StatelessWidget {
             const SizedBox(width: 14),
             Expanded(
               child: Text(
-                context.t(
-                  'STORED ON THIS PHONE · APP-PRIVATE STORAGE',
-                  'STOCKÉ SUR CE TÉLÉPHONE · STOCKAGE PRIVÉ',
-                ),
+                'STORED ON ALVI SERVERS IN CANADA · ENCRYPTED',
                 style: He.mono(14.5, weight: FontWeight.w700),
               ),
             ),

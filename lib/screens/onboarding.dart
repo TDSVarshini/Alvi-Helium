@@ -164,47 +164,108 @@ class PrivacyStep extends StatelessWidget {
   }
 }
 
-/// What Helium stores and where; reused from You › Privacy and data.
+/// Privacy choices shown during onboarding and in You › Privacy.
 class PrivacyChoices extends StatelessWidget {
   const PrivacyChoices({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Widget row(String title, String sub, {String? tag}) => Container(
+    final app = context.watch<AppState>();
+    final p = app.prefs;
+
+    Widget choice(String title, String sub, {String? tag, Widget? control}) =>
+        Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: He.hairline))),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text.rich(TextSpan(children: [
-              TextSpan(text: title, style: He.sans(19)),
-              if (tag != null) TextSpan(text: '   $tag', style: He.eyebrow(size: 11.5)),
-            ])),
-            const SizedBox(height: 3),
-            Text(sub, style: He.sans(15, color: He.ink3)),
-          ]),
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: He.hairline)),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(text: title, style: He.sans(19)),
+                          if (tag != null)
+                            TextSpan(
+                              text: '   $tag',
+                              style: He.eyebrow(size: 11.5),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(sub, style: He.sans(15, color: He.ink3)),
+                  ],
+                ),
+              ),
+              if (control != null) ...[const SizedBox(width: 12), control],
+            ],
+          ),
         );
-    return Column(children: [
-      const Hairline(),
-      row(context.t('Health signals', 'Signaux de santé'),
-          context.t('Heart, sleep, motion and temperature from your band, needed for your insights',
-              'Cœur, sommeil, mouvement et température du bracelet, nécessaires à vos analyses'),
-          tag: context.t('REQUIRED', 'REQUIS')),
-      row(context.t('Nothing leaves your phone', 'Rien ne quitte votre téléphone'),
-          context.t('No account, no analytics, no uploads. Weather uses your rough location only.',
-              'Aucun compte, aucune analyse, aucun envoi. La météo utilise seulement votre position approximative.')),
-      row(context.t('You hold the backup', 'Vous gardez la sauvegarde'),
-          context.t('Export a file in You › Privacy and data to move to a new phone.',
-              'Exportez un fichier dans Vous › Confidentialité pour changer de téléphone.')),
-      const SizedBox(height: 22),
-      Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Icon(Icons.lock_outline_rounded, size: 20, color: He.ink2),
-        const SizedBox(width: 14),
-        Expanded(
-          child: Text(context.t('STORED ON THIS PHONE · APP-PRIVATE STORAGE', 'STOCKÉ SUR CE TÉLÉPHONE · STOCKAGE PRIVÉ'),
-              style: He.mono(14.5, weight: FontWeight.w700)),
+
+    return Column(
+      children: [
+        const Hairline(),
+        choice(
+          context.t('Health signals', 'Signaux de santé'),
+          context.t(
+            'Heart, sleep, motion and temperature, needed for your insights',
+            'Cœur, sommeil, mouvement et température, nécessaires à vos analyses',
+          ),
+          tag: context.t('REQUIRED', 'REQUIS'),
         ),
-      ]),
-    ]);
+        choice(
+          context.t('Product improvement', 'Amélioration du produit'),
+          context.t(
+            'De-identified data to improve accuracy',
+            'Données dépersonnalisées pour améliorer la précision',
+          ),
+          control: Switch.adaptive(
+            value: p.productImprovement,
+            activeColor: He.ink,
+            onChanged: (value) {
+              p.productImprovement = value;
+              app.save();
+            },
+          ),
+        ),
+        choice(
+          context.t('Research', 'Recherche'),
+          context.t(
+            'Future wellness studies. We’ll ask before each one',
+            'Futures études sur le bien-être. Nous demanderons votre accord avant chacune.',
+          ),
+          control: Switch.adaptive(
+            value: p.research,
+            activeColor: He.ink,
+            onChanged: (value) {
+              p.research = value;
+              app.save();
+            },
+          ),
+        ),
+        const SizedBox(height: 22),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Icon(Icons.lock_outline_rounded, size: 20, color: He.ink2),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                'STORED ON ALVI SERVERS IN CANADA · ENCRYPTED',
+                style: He.mono(14.5, weight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 

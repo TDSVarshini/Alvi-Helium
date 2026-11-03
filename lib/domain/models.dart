@@ -21,8 +21,8 @@ class UserProfile {
     this.sex = Sex.unspecified,
     Set<Goal>? goals,
     DateTime? memberSince,
-  })  : goals = goals ?? {},
-        memberSince = memberSince ?? DateTime.now();
+  }) : goals = goals ?? {},
+       memberSince = memberSince ?? DateTime.now();
 
   String name;
   int birthYear;
@@ -36,45 +36,60 @@ class UserProfile {
   int get maxHr => 220 - age;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'birthYear': birthYear,
-        'heightCm': heightCm,
-        'weightKg': weightKg,
-        'sex': sex.name,
-        'goals': goals.map((g) => g.name).toList(),
-        'memberSince': memberSince.toIso8601String(),
-      };
+    'name': name,
+    'birthYear': birthYear,
+    'heightCm': heightCm,
+    'weightKg': weightKg,
+    'sex': sex.name,
+    'goals': goals.map((g) => g.name).toList(),
+    'memberSince': memberSince.toIso8601String(),
+  };
 
   factory UserProfile.fromJson(Map<String, Object?> j) => UserProfile(
-        name: j['name'] as String? ?? '',
-        birthYear: j['birthYear'] as int? ?? 1992,
-        heightCm: j['heightCm'] as int? ?? 175,
-        weightKg: j['weightKg'] as int? ?? 70,
-        sex: Sex.values.asNameMap()[j['sex']] ?? Sex.unspecified,
-        goals: {for (final g in (j['goals'] as List? ?? const [])) ?Goal.values.asNameMap()[g]},
-        memberSince: DateTime.tryParse(j['memberSince'] as String? ?? ''),
-      );
+    name: j['name'] as String? ?? '',
+    birthYear: j['birthYear'] as int? ?? 1992,
+    heightCm: j['heightCm'] as int? ?? 175,
+    weightKg: j['weightKg'] as int? ?? 70,
+    sex: Sex.values.asNameMap()[j['sex']] ?? Sex.unspecified,
+    goals: {
+      for (final g in (j['goals'] as List? ?? const []))
+        ?Goal.values.asNameMap()[g],
+    },
+    memberSince: DateTime.tryParse(j['memberSince'] as String? ?? ''),
+  );
 }
 
 /// The smart-wake window. Stored in minutes after midnight.
 class AlarmWindow {
-  AlarmWindow({this.enabled = true, this.earliest = 390, this.latest = 420, Set<int>? days, this.phoneBackup = false})
-      : days = days ?? {1, 2, 3, 4, 5};
+  AlarmWindow({
+    this.enabled = true,
+    this.earliest = 390,
+    this.latest = 420,
+    Set<int>? days,
+    this.phoneBackup = false,
+  }) : days = days ?? {1, 2, 3, 4, 5};
   bool enabled;
   int earliest;
   int latest;
   Set<int> days; // DateTime.monday..sunday
   bool phoneBackup;
 
-  Map<String, Object?> toJson() =>
-      {'enabled': enabled, 'earliest': earliest, 'latest': latest, 'days': days.toList(), 'phoneBackup': phoneBackup};
+  Map<String, Object?> toJson() => {
+    'enabled': enabled,
+    'earliest': earliest,
+    'latest': latest,
+    'days': days.toList(),
+    'phoneBackup': phoneBackup,
+  };
   factory AlarmWindow.fromJson(Map<String, Object?> j) => AlarmWindow(
-        enabled: j['enabled'] as bool? ?? true,
-        earliest: j['earliest'] as int? ?? 390,
-        latest: j['latest'] as int? ?? 420,
-        days: {for (final d in (j['days'] as List? ?? const [1, 2, 3, 4, 5])) d as int},
-        phoneBackup: j['phoneBackup'] as bool? ?? false,
-      );
+    enabled: j['enabled'] as bool? ?? true,
+    earliest: j['earliest'] as int? ?? 390,
+    latest: j['latest'] as int? ?? 420,
+    days: {
+      for (final d in (j['days'] as List? ?? const [1, 2, 3, 4, 5])) d as int,
+    },
+    phoneBackup: j['phoneBackup'] as bool? ?? false,
+  );
 }
 
 enum HapticCue { zone, goal, move, alarm, breathe }
@@ -101,23 +116,27 @@ class Prefs {
   AlarmWindow alarm = AlarmWindow();
   int stepGoal = 10000;
   bool shareHeartRate = false;
+  bool productImprovement = false;
+  bool research = false;
 
   Map<String, Object?> toJson() => {
-        'french': french,
-        'region': region,
-        'metric': metric,
-        'celsius': celsius,
-        'wear': wear.name,
-        'size': size.name,
-        'hand': hand.name,
-        'strength': strength.name,
-        'cues': {for (final e in cues.entries) e.key.name: e.value},
-        'quietStart': quietStart,
-        'quietEnd': quietEnd,
-        'alarm': alarm.toJson(),
-        'stepGoal': stepGoal,
-        'shareHeartRate': shareHeartRate,
-      };
+    'french': french,
+    'region': region,
+    'metric': metric,
+    'celsius': celsius,
+    'wear': wear.name,
+    'size': size.name,
+    'hand': hand.name,
+    'strength': strength.name,
+    'cues': {for (final e in cues.entries) e.key.name: e.value},
+    'quietStart': quietStart,
+    'quietEnd': quietEnd,
+    'alarm': alarm.toJson(),
+    'stepGoal': stepGoal,
+    'shareHeartRate': shareHeartRate,
+    'productImprovement': productImprovement,
+    'research': research,
+  };
 
   factory Prefs.fromJson(Map<String, Object?> j) {
     final p = Prefs()
@@ -128,18 +147,23 @@ class Prefs {
       ..wear = WearSpot.values.asNameMap()[j['wear']] ?? WearSpot.wrist
       ..size = BandSize.values.asNameMap()[j['size']] ?? BandSize.m
       ..hand = Hand.values.asNameMap()[j['hand']] ?? Hand.left
-      ..strength = HapticStrength.values.asNameMap()[j['strength']] ?? HapticStrength.medium
+      ..strength =
+          HapticStrength.values.asNameMap()[j['strength']] ??
+          HapticStrength.medium
       ..quietStart = j['quietStart'] as int? ?? 22 * 60
       ..quietEnd = j['quietEnd'] as int? ?? 390
       ..stepGoal = j['stepGoal'] as int? ?? 10000
-      ..shareHeartRate = j['shareHeartRate'] as bool? ?? false;
+      ..shareHeartRate = j['shareHeartRate'] as bool? ?? false
+      ..productImprovement = j['productImprovement'] as bool? ?? false
+      ..research = j['research'] as bool? ?? false;
     final cues = j['cues'] as Map?;
     if (cues != null) {
       for (final c in HapticCue.values) {
         if (cues[c.name] is bool) p.cues[c] = cues[c.name] as bool;
       }
     }
-    if (j['alarm'] is Map) p.alarm = AlarmWindow.fromJson((j['alarm'] as Map).cast());
+    if (j['alarm'] is Map)
+      p.alarm = AlarmWindow.fromJson((j['alarm'] as Map).cast());
     return p;
   }
 }
@@ -183,34 +207,34 @@ class NightSummary {
   bool get worn => sleepMin > 0;
 
   Map<String, Object?> toJson() => {
-        'date': date.toIso8601String(),
-        'sleepMin': sleepMin,
-        'deepMin': deepMin,
-        'remMin': remMin,
-        'sleepScore': sleepScore,
-        'hrv': hrv,
-        'restingHr': restingHr,
-        'spo2': spo2,
-        'temp': temp,
-        'respRate': respRate,
-        'steps': steps,
-        'readiness': readiness,
-      };
+    'date': date.toIso8601String(),
+    'sleepMin': sleepMin,
+    'deepMin': deepMin,
+    'remMin': remMin,
+    'sleepScore': sleepScore,
+    'hrv': hrv,
+    'restingHr': restingHr,
+    'spo2': spo2,
+    'temp': temp,
+    'respRate': respRate,
+    'steps': steps,
+    'readiness': readiness,
+  };
 
   factory NightSummary.fromJson(Map<String, Object?> j) => NightSummary(
-        date: DateTime.parse(j['date'] as String),
-        sleepMin: j['sleepMin'] as int? ?? 0,
-        deepMin: j['deepMin'] as int? ?? 0,
-        remMin: j['remMin'] as int? ?? 0,
-        sleepScore: j['sleepScore'] as int? ?? 0,
-        hrv: (j['hrv'] as num?)?.toDouble(),
-        restingHr: (j['restingHr'] as num?)?.toDouble(),
-        spo2: (j['spo2'] as num?)?.toDouble(),
-        temp: (j['temp'] as num?)?.toDouble(),
-        respRate: (j['respRate'] as num?)?.toDouble(),
-        steps: j['steps'] as int? ?? 0,
-        readiness: j['readiness'] as int? ?? 0,
-      );
+    date: DateTime.parse(j['date'] as String),
+    sleepMin: j['sleepMin'] as int? ?? 0,
+    deepMin: j['deepMin'] as int? ?? 0,
+    remMin: j['remMin'] as int? ?? 0,
+    sleepScore: j['sleepScore'] as int? ?? 0,
+    hrv: (j['hrv'] as num?)?.toDouble(),
+    restingHr: (j['restingHr'] as num?)?.toDouble(),
+    spo2: (j['spo2'] as num?)?.toDouble(),
+    temp: (j['temp'] as num?)?.toDouble(),
+    respRate: (j['respRate'] as num?)?.toDouble(),
+    steps: j['steps'] as int? ?? 0,
+    readiness: j['readiness'] as int? ?? 0,
+  );
 }
 
 enum WorkoutKind { run, walk, ride, poolSwim, strength }
@@ -218,13 +242,16 @@ enum WorkoutKind { run, walk, ride, poolSwim, strength }
 extension WorkoutKindX on WorkoutKind {
   /// Vendor sport codes understood by the ring.
   int get ringCode => switch (this) {
-        WorkoutKind.walk => 4,
-        WorkoutKind.run => 7,
-        WorkoutKind.ride => 9,
-        WorkoutKind.poolSwim => 10,
-        WorkoutKind.strength => 10,
-      };
-  bool get usesGps => this == WorkoutKind.run || this == WorkoutKind.walk || this == WorkoutKind.ride;
+    WorkoutKind.walk => 4,
+    WorkoutKind.run => 7,
+    WorkoutKind.ride => 9,
+    WorkoutKind.poolSwim => 10,
+    WorkoutKind.strength => 10,
+  };
+  bool get usesGps =>
+      this == WorkoutKind.run ||
+      this == WorkoutKind.walk ||
+      this == WorkoutKind.ride;
 }
 
 /// A cue the band gave during a workout ("In your zone" at 06:12).
@@ -233,9 +260,16 @@ class WorkoutCue {
   final Duration at;
   final HapticPattern pattern;
   final String label;
-  Map<String, Object?> toJson() => {'at': at.inSeconds, 'pattern': pattern.name, 'label': label};
-  factory WorkoutCue.fromJson(Map<String, Object?> j) => WorkoutCue(Duration(seconds: j['at'] as int),
-      HapticPattern.values.asNameMap()[j['pattern']] ?? HapticPattern.onePulse, j['label'] as String? ?? '');
+  Map<String, Object?> toJson() => {
+    'at': at.inSeconds,
+    'pattern': pattern.name,
+    'label': label,
+  };
+  factory WorkoutCue.fromJson(Map<String, Object?> j) => WorkoutCue(
+    Duration(seconds: j['at'] as int),
+    HapticPattern.values.asNameMap()[j['pattern']] ?? HapticPattern.onePulse,
+    j['label'] as String? ?? '',
+  );
 }
 
 class RecordedWorkout {
@@ -253,8 +287,8 @@ class RecordedWorkout {
     this.startedByTap = false,
     this.endedByTap = false,
     this.fromRing = false,
-  })  : zoneMinutes = zoneMinutes ?? {},
-        cues = cues ?? [];
+  }) : zoneMinutes = zoneMinutes ?? {},
+       cues = cues ?? [];
 
   final WorkoutKind kind;
   final DateTime start;
@@ -274,49 +308,60 @@ class RecordedWorkout {
   double get effort =>
       zoneMinutes.entries.fold(0.0, (s, e) => s + e.key * e.value) / 10.0;
 
-  Duration? get pacePerKm =>
-      distanceM < 50 ? null : Duration(seconds: (duration.inSeconds / (distanceM / 1000)).round());
+  Duration? get pacePerKm => distanceM < 50
+      ? null
+      : Duration(seconds: (duration.inSeconds / (distanceM / 1000)).round());
 
   Map<String, Object?> toJson() => {
-        'kind': kind.name,
-        'start': start.toIso8601String(),
-        'duration': duration.inSeconds,
-        'active': activeDuration?.inSeconds,
-        'distanceM': distanceM,
-        'kcal': kcal,
-        'avgHr': avgHr,
-        'maxHr': maxHr,
-        'zones': {for (final e in zoneMinutes.entries) '${e.key}': e.value},
-        'cues': cues.map((c) => c.toJson()).toList(),
-        'startedByTap': startedByTap,
-        'endedByTap': endedByTap,
-      };
+    'kind': kind.name,
+    'start': start.toIso8601String(),
+    'duration': duration.inSeconds,
+    'active': activeDuration?.inSeconds,
+    'distanceM': distanceM,
+    'kcal': kcal,
+    'avgHr': avgHr,
+    'maxHr': maxHr,
+    'zones': {for (final e in zoneMinutes.entries) '${e.key}': e.value},
+    'cues': cues.map((c) => c.toJson()).toList(),
+    'startedByTap': startedByTap,
+    'endedByTap': endedByTap,
+  };
 
   factory RecordedWorkout.fromJson(Map<String, Object?> j) => RecordedWorkout(
-        kind: WorkoutKind.values.asNameMap()[j['kind']] ?? WorkoutKind.run,
-        start: DateTime.parse(j['start'] as String),
-        duration: Duration(seconds: j['duration'] as int),
-        activeDuration: j['active'] == null ? null : Duration(seconds: j['active'] as int),
-        distanceM: (j['distanceM'] as num?)?.toDouble() ?? 0,
-        kcal: (j['kcal'] as num?)?.toDouble() ?? 0,
-        avgHr: j['avgHr'] as int? ?? 0,
-        maxHr: j['maxHr'] as int? ?? 0,
-        zoneMinutes: {
-          for (final e in ((j['zones'] as Map?) ?? const {}).entries) int.parse(e.key as String): e.value as int
-        },
-        cues: [for (final c in (j['cues'] as List? ?? const [])) WorkoutCue.fromJson((c as Map).cast())],
-        startedByTap: j['startedByTap'] as bool? ?? false,
-        endedByTap: j['endedByTap'] as bool? ?? false,
-      );
+    kind: WorkoutKind.values.asNameMap()[j['kind']] ?? WorkoutKind.run,
+    start: DateTime.parse(j['start'] as String),
+    duration: Duration(seconds: j['duration'] as int),
+    activeDuration: j['active'] == null
+        ? null
+        : Duration(seconds: j['active'] as int),
+    distanceM: (j['distanceM'] as num?)?.toDouble() ?? 0,
+    kcal: (j['kcal'] as num?)?.toDouble() ?? 0,
+    avgHr: j['avgHr'] as int? ?? 0,
+    maxHr: j['maxHr'] as int? ?? 0,
+    zoneMinutes: {
+      for (final e in ((j['zones'] as Map?) ?? const {}).entries)
+        int.parse(e.key as String): e.value as int,
+    },
+    cues: [
+      for (final c in (j['cues'] as List? ?? const []))
+        WorkoutCue.fromJson((c as Map).cast()),
+    ],
+    startedByTap: j['startedByTap'] as bool? ?? false,
+    endedByTap: j['endedByTap'] as bool? ?? false,
+  );
 
   factory RecordedWorkout.fromRing(WorkoutRecord r) => RecordedWorkout(
-        kind: switch (r.type) { 4 => WorkoutKind.walk, 9 => WorkoutKind.ride, _ => WorkoutKind.run },
-        start: r.start,
-        duration: Duration(seconds: r.durationSeconds),
-        distanceM: r.distanceMeters.toDouble(),
-        kcal: r.kcal,
-        avgHr: r.avgHr,
-        maxHr: r.maxHr,
-        fromRing: true,
-      );
+    kind: switch (r.type) {
+      4 => WorkoutKind.walk,
+      9 => WorkoutKind.ride,
+      _ => WorkoutKind.run,
+    },
+    start: r.start,
+    duration: Duration(seconds: r.durationSeconds),
+    distanceM: r.distanceMeters.toDouble(),
+    kcal: r.kcal,
+    avgHr: r.avgHr,
+    maxHr: r.maxHr,
+    fromRing: true,
+  );
 }

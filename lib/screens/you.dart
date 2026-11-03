@@ -112,6 +112,13 @@ class YouTab extends StatelessWidget {
         height: 84,
         onTap: () => _open(context, const DiagnosticsScreen()),
       ),
+      RowTile(
+        label: context.t('Membership', 'Abonnement'),
+        value: context.t('Free · Coaching trial', 'Gratuit · Essai coaching'),
+        chevron: true,
+        height: 84,
+        onTap: () => _open(context, const MembershipScreen()),
+      ),
     ]);
   }
 }
@@ -393,5 +400,156 @@ class PrivacyScreen extends StatelessWidget {
       Disclaimer(context.t('Consent under PIPEDA and Québec Law 25. Privacy officer: [CONTACT].',
           'Consentement selon la LPRPDE et la Loi 25 du Québec. Responsable : [CONTACT].')),
     ]);
+  }
+}
+
+class MembershipScreen extends StatelessWidget {
+  const MembershipScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DetailPage(
+      title: context.t('Membership', 'Abonnement'),
+      children: [
+        Text(
+          context.t(
+            'Every metric is free.\nAlways.',
+            'Toutes les mesures sont gratuites.\nToujours.',
+          ),
+          style: He.headline(32),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          context.t(
+            'Sleep, heart, recovery and activity never sit behind a paywall. Coaching is the optional extra.',
+            'Le sommeil, le cœur, la récupération et l’activité restent toujours gratuits. Le coaching est une option supplémentaire.',
+          ),
+          style: He.body(16),
+        ),
+        const SizedBox(height: 28),
+
+        // Coaching trial countdown
+        Center(
+          child: SizedBox(
+            width: 160,
+            height: 160,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 160,
+                  height: 160,
+                  child: CircularProgressIndicator(
+                    value: 0.25,
+                    strokeWidth: 1.5,
+                    backgroundColor: He.track,
+                    valueColor: const AlwaysStoppedAnimation<Color>(He.teal),
+                  ),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      context.t('COACHING TRIAL', 'ESSAI COACHING'),
+                      style: He.eyebrow(size: 10),
+                    ),
+                    const SizedBox(height: 5),
+                    Text('24', style: He.display(58)),
+                    Text(
+                      context.t('DAYS LEFT', 'JOURS RESTANTS'),
+                      style: He.eyebrow(size: 9),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 28),
+
+        Text(
+          context.t(
+            'ALVI INTELLIGENCE COACHING',
+            'COACHING INTELLIGENCE ALVI',
+          ),
+          style: He.eyebrow(),
+        ),
+        const SizedBox(height: 12),
+
+        _CoachingBenefit(
+          text: context.t(
+            'A daily plan shaped by your readiness',
+            'Un programme quotidien adapté à votre disponibilité',
+          ),
+        ),
+        _CoachingBenefit(
+          text: context.t(
+            'Deeper weekly and monthly insights',
+            'Des analyses hebdomadaires et mensuelles approfondies',
+          ),
+        ),
+        _CoachingBenefit(
+          text: context.t(
+            'Training load and recovery guidance',
+            'Des conseils sur la charge d’entraînement et la récupération',
+          ),
+        ),
+
+        const SizedBox(height: 16),
+        const Hairline(),
+
+        RowTile(
+          label: context.t('After your trial', 'Après votre essai'),
+          value: '[PRICE CAD] / MO',
+          height: 58,
+          labelSize: 15,
+        ),
+        RowTile(
+          label: context.t('Or yearly', 'Ou annuel'),
+          value: '[PRICE CAD] / YR',
+          height: 58,
+          labelSize: 15,
+        ),
+        RowTile(
+          label: context.t('Change plan', 'Changer de forfait'),
+          chevron: true,
+          height: 58,
+          labelSize: 15,
+          onTap: () => toast(
+            context,
+            context.t(
+              'Plan selection is not available yet.',
+              'Le choix du forfait n’est pas encore disponible.',
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CoachingBenefit extends StatelessWidget {
+  const _CoachingBenefit({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 9),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(right: 12, top: 2),
+            child: Icon(Icons.check, size: 16, color: He.ink2),
+          ),
+          Expanded(
+            child: Text(text, style: He.sans(14.5, color: He.ink2)),
+          ),
+        ],
+      ),
+    );
   }
 }

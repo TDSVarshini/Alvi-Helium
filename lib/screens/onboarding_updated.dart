@@ -70,7 +70,7 @@ class WelcomeScreen extends StatelessWidget {
               for (final line in [
                 context.t('Nothing to look at.', 'Rien à regarder.'),
                 context.t(
-                  'A touch when it matters.',
+                  'A touch when it matters True.',
                   'Une touche quand ça compte.',
                 ),
                 context.t(

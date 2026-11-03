@@ -92,27 +92,57 @@ class WelcomeScreen extends StatelessWidget {
                 onTap: () => _push(context, const LanguageStep()),
               ),
               const SizedBox(height: 14),
-              Center(
-                child: UnderlineLink(
-                  context.t('I already have an account', 'J’ai déjà un compte'),
-                  size: 15,
-                  onTap: () {
-                    toast(
-                      context,
-                      context.t(
-                        'Account sign-in is not available yet.',
-                        'La connexion au compte n’est pas encore disponible.',
+              // Account link and company footer are grouped together so the
+              // company name appears directly below the account link.
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      toast(
+                        context,
+                        context.t(
+                          'Account sign-in is not available yet.',
+                          'La connexion au compte n’est pas encore disponible.',
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
                       ),
-                    );
-                  },
-                ),
+                      child: Text(
+                        context.t(
+                          'I already have an account',
+                          'J’ai déjà un compte',
+                        ),
+                        textAlign: TextAlign.center,
+                        style:
+                            He.sans(
+                              15,
+                              weight: FontWeight.w600,
+                              color: He.ink,
+                            ).copyWith(
+                              decoration: TextDecoration.underline,
+                              decorationColor: He.ink,
+                              decorationThickness: 1.2,
+                            ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'ALVI INTELLECTS INC. · ONTARIO',
+                    textAlign: TextAlign.center,
+                    style: He.eyebrow(
+                      size: 11.5,
+                    ).copyWith(color: He.ink2, letterSpacing: 1.4),
+                  ),
+                ],
               ),
-              const SizedBox(height: 18),
-              Text(
-                'ALVI INTELLECTS INC. · ONTARIO',
-                style: He.eyebrow(size: 12),
-              ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
             ],
           ),
         ),

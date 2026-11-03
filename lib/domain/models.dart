@@ -116,6 +116,7 @@ class Prefs {
   AlarmWindow alarm = AlarmWindow();
   int stepGoal = 10000;
   bool shareHeartRate = false;
+  bool healthSignals = false;
   bool productImprovement = false;
   bool research = false;
 
@@ -134,6 +135,7 @@ class Prefs {
     'alarm': alarm.toJson(),
     'stepGoal': stepGoal,
     'shareHeartRate': shareHeartRate,
+    'healthSignals': healthSignals,
     'productImprovement': productImprovement,
     'research': research,
   };
@@ -154,6 +156,7 @@ class Prefs {
       ..quietEnd = j['quietEnd'] as int? ?? 390
       ..stepGoal = j['stepGoal'] as int? ?? 10000
       ..shareHeartRate = j['shareHeartRate'] as bool? ?? false
+      ..healthSignals = j['healthSignals'] as bool? ?? false
       ..productImprovement = j['productImprovement'] as bool? ?? false
       ..research = j['research'] as bool? ?? false;
     final cues = j['cues'] as Map?;

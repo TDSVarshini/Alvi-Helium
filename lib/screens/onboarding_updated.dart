@@ -251,12 +251,26 @@ class PrivacyStep extends StatelessWidget {
         'You decide what Helium keeps. Change any choice later in You › Privacy.',
         'Vous décidez de ce que Helium conserve. Modifiez vos choix plus tard dans Vous › Confidentialité.',
       ),
-      footer: PillButton(
-        context.t('Continue', 'Continuer'),
-        onTap: () {
-          app.save();
-          _push(context, const AboutYouStep());
-        },
+      footer: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.t(
+              'Consent under PIPEDA and Québec Law 25. Privacy officer: [CONTACT]. Read the full Privacy Policy.',
+              'Consentement selon la LPRPDE et la Loi 25 du Québec. Responsable de la protection : [CONTACT]. Lire la Politique de confidentialité complète.',
+            ),
+            style: He.sans(14.5, color: He.ink3, height: 1.45),
+          ),
+          const SizedBox(height: 18),
+          PillButton(
+            context.t('Continue', 'Continuer'),
+            onTap: () {
+              app.save();
+              _push(context, const AboutYouStep());
+            },
+          ),
+        ],
       ),
       children: const [PrivacyChoices()],
     );
@@ -317,7 +331,14 @@ class PrivacyChoices extends StatelessWidget {
             'Heart, sleep, motion and temperature, needed for your insights',
             'Cœur, sommeil, mouvement et température, nécessaires à vos analyses',
           ),
-          tag: context.t('REQUIRED', 'REQUIS'),
+          control: Switch.adaptive(
+            value: p.healthSignals,
+            activeColor: He.ink,
+            onChanged: (value) {
+              p.healthSignals = value;
+              app.save();
+            },
+          ),
         ),
         choice(
           context.t('Product improvement', 'Amélioration du produit'),

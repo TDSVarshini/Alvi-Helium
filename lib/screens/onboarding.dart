@@ -218,7 +218,14 @@ class PrivacyChoices extends StatelessWidget {
             'Heart, sleep, motion and temperature, needed for your insights',
             'Cœur, sommeil, mouvement et température, nécessaires à vos analyses',
           ),
-          tag: context.t('REQUIRED', 'REQUIS'),
+          control: Switch.adaptive(
+            value: p.healthSignals,
+            activeColor: He.ink,
+            onChanged: (value) {
+              p.healthSignals = value;
+              app.save();
+            },
+          ),
         ),
         choice(
           context.t('Product improvement', 'Amélioration du produit'),

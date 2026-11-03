@@ -194,7 +194,7 @@ class LanguageStep extends StatelessWidget {
       title: context.t('Choose your\nlanguage.', 'Choisissez votre\nlangue.'),
       footer: PillButton(
         context.t('Continue', 'Continuer'),
-        onTap: () => _push(context, const PrivacyStep()),
+        onTap: () => _push(context, const AccountStep()),
       ),
       children: [
         const Hairline(),
@@ -237,6 +237,133 @@ class LanguageStep extends StatelessWidget {
   }
 }
 
+
+class AccountStep extends StatelessWidget {
+  const AccountStep({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    void unavailable(String method) {
+      toast(
+        context,
+        context.t(
+          '$method sign-in is not available yet.',
+          'La connexion avec $method n’est pas encore disponible.',
+        ),
+      );
+    }
+
+    Widget accountButton({
+      required String label,
+      required Widget icon,
+      required VoidCallback onTap,
+      bool filled = false,
+    }) {
+      return InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(40),
+        child: Container(
+          height: 54,
+          decoration: BoxDecoration(
+            color: filled ? He.ink : Colors.transparent,
+            borderRadius: BorderRadius.circular(40),
+            border: Border.all(
+              color: filled ? He.ink : He.hairline,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              icon,
+              const SizedBox(width: 12),
+              Text(
+                label,
+                style: He.sans(
+                  15,
+                  weight: FontWeight.w600,
+                  color: filled ? Colors.white : He.ink,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return StepScaffold(
+      step: 2,
+      total: 8,
+      eyebrow: 'ACCOUNT',
+      title: context.t(
+        'Create your account.',
+        'Créez votre compte.',
+      ),
+      subtitle: context.t(
+        'It keeps your baselines safe, so a new phone or a new band never starts you from zero.',
+        'Vos données de référence restent protégées : un nouveau téléphone ou bracelet ne vous fera jamais repartir de zéro.',
+      ),
+      children: [
+        const SizedBox(height: 18),
+        Center(
+          child: Container(
+            width: 132,
+            height: 132,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: He.hairline, width: 1),
+            ),
+            alignment: Alignment.center,
+            child: const AlviMark(width: 76),
+          ),
+        ),
+        const SizedBox(height: 24),
+      ],
+      footer: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          accountButton(
+            label: context.t('Continue with Apple', 'Continuer avec Apple'),
+            icon: const Text(
+              '',
+              style: TextStyle(fontSize: 23, color: Colors.white),
+            ),
+            filled: true,
+            onTap: () => unavailable('Apple'),
+          ),
+          const SizedBox(height: 10),
+          accountButton(
+            label: context.t('Continue with Google', 'Continuer avec Google'),
+            icon: const Text(
+              'G',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF4285F4),
+              ),
+            ),
+            onTap: () => unavailable('Google'),
+          ),
+          const SizedBox(height: 10),
+          accountButton(
+            label: context.t('Continue with email', 'Continuer avec e-mail'),
+            icon: Icon(Icons.mail_outline, color: He.ink, size: 21),
+            onTap: () => unavailable('Email'),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            context.t(
+              'By continuing you agree to the Terms of Use and Privacy Policy, available in English and French.',
+              'En continuant, vous acceptez les Conditions d’utilisation et la Politique de confidentialité, disponibles en anglais et en français.',
+            ),
+            textAlign: TextAlign.center,
+            style: He.sans(11.5, color: He.ink3, height: 1.4),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class PrivacyStep extends StatelessWidget {
   const PrivacyStep({super.key});
 
@@ -244,7 +371,7 @@ class PrivacyStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = context.watch<AppState>();
     return StepScaffold(
-      step: 2,
+      step: 3,
       eyebrow: context.t('PRIVACY', 'CONFIDENTIALITÉ'),
       title: context.t('Your body.\nYour data.', 'Votre corps.\nVos données.'),
       subtitle: context.t(
@@ -496,7 +623,7 @@ class _AboutYouStepState extends State<AboutYouStep> {
       Goal.move: context.t('Move more', 'Bouger plus'),
     };
     return StepScaffold(
-      step: 3,
+      step: 4,
       eyebrow: context.t('ABOUT YOU', 'À PROPOS DE VOUS'),
       title: context.t('A few basics.', 'Quelques bases.'),
       subtitle: context.t(
@@ -620,7 +747,7 @@ class WakeStep extends StatelessWidget {
       ),
     ];
     return StepScaffold(
-      step: 4,
+      step: 5,
       eyebrow: context.t('PAIR YOUR BAND', 'JUMELEZ VOTRE BRACELET'),
       title: context.t('Wake the core.', 'Réveillez le cœur.'),
       footer: Column(
@@ -796,7 +923,7 @@ class _FoundStepState extends State<FoundStep> {
     final c = _candidate;
     final strong = (c?.rssi ?? -100) > -65;
     return StepScaffold(
-      step: 5,
+      step: 6,
       eyebrow: c == null
           ? (_scanning
                 ? context.t('SEARCHING', 'RECHERCHE')
@@ -994,7 +1121,7 @@ class WearStep extends StatelessWidget {
     }
 
     return StepScaffold(
-      step: 6,
+      step: 7,
       eyebrow: context.t('WEAR', 'PORT'),
       title: context.t('Where will you wear it?', 'Où le porterez-vous?'),
       subtitle: context.t(
@@ -1137,7 +1264,7 @@ class HapticLanguageStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final app = context.watch<AppState>();
     return StepScaffold(
-      step: 7,
+      step: 8,
       eyebrow: context.t('THE HAPTIC LANGUAGE', 'LE LANGAGE HAPTIQUE'),
       title: context.t('It speaks in touch.', 'Il parle par le toucher.'),
       subtitle: context.t(

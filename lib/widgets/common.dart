@@ -383,7 +383,7 @@ class StepScaffold extends StatelessWidget {
     required this.children,
     required this.footer,
     this.onBack,
-    this.total = 7,
+    this.total = 8,
   });
   final int step;
   final int total;

@@ -44,107 +44,116 @@ class WelcomeScreen extends StatelessWidget {
 
     return Scaffold(
       body: Backdrop(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: He.gutter),
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [lang('EN', false), lang('FR', true)],
-                ),
-              ),
-              const Spacer(),
-              const Ripples(size: 300, child: AlviMark(width: 150)),
-              const Spacer(),
-              Text(
-                context.t(
-                  'Wear less.\nKnow more.',
-                  'Portez moins.\nSachez plus.',
-                ),
-                textAlign: TextAlign.center,
-                style: He.headline(46),
-              ),
-              const SizedBox(height: 22),
-              for (final line in [
-                context.t('Nothing to look at.', 'Rien à regarder.'),
-                context.t(
-                  'A touch when it matters True.',
-                  'Une touche quand ça compte.',
-                ),
-                context.t(
-                  'A morning brief that reads your night.',
-                  'Un bilan matinal qui lit votre nuit.',
-                ),
-              ])
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    line,
-                    textAlign: TextAlign.center,
-                    style: He.body(18),
-                  ),
-                ),
-              const Spacer(),
-              PillButton(
-                context.t('Get started', 'Commencer'),
-                onTap: () => _push(context, const LanguageStep()),
-              ),
-              const SizedBox(height: 14),
-              // Account link and company footer are grouped together so the
-              // company name appears directly below the account link.
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      toast(
-                        context,
-                        context.t(
-                          'Account sign-in is not available yet.',
-                          'La connexion au compte n’est pas encore disponible.',
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: He.gutter),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [lang('EN', false), lang('FR', true)],
+                          ),
                         ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      child: Text(
-                        context.t(
-                          'I already have an account',
-                          'J’ai déjà un compte',
+                        const Spacer(),
+                        const Ripples(size: 300, child: AlviMark(width: 150)),
+                        const Spacer(),
+                        Text(
+                          context.t(
+                            'Wear less.\nKnow more.',
+                            'Portez moins.\nSachez plus.',
+                          ),
+                          textAlign: TextAlign.center,
+                          style: He.headline(46),
                         ),
-                        textAlign: TextAlign.center,
-                        style:
-                            He.sans(
-                              15,
-                              weight: FontWeight.w600,
-                              color: He.ink,
-                            ).copyWith(
-                              decoration: TextDecoration.underline,
-                              decorationColor: He.ink,
-                              decorationThickness: 1.2,
+                        const SizedBox(height: 22),
+                        for (final line in [
+                          context.t('Nothing to look at.', 'Rien à regarder.'),
+                          context.t(
+                            'A touch when it matters True.',
+                            'Une touche quand ça compte.',
+                          ),
+                          context.t(
+                            'A morning brief that reads your night.',
+                            'Un bilan matinal qui lit votre nuit.',
+                          ),
+                        ])
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              line,
+                              textAlign: TextAlign.center,
+                              style: He.body(18),
                             ),
-                      ),
+                          ),
+                        const Spacer(),
+                        PillButton(
+                          context.t('Get started', 'Commencer'),
+                          onTap: () => _push(context, const LanguageStep()),
+                        ),
+                        const SizedBox(height: 14),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                toast(
+                                  context,
+                                  context.t(
+                                    'Account sign-in is not available yet.',
+                                    'La connexion au compte n’est pas encore disponible.',
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                child: Text(
+                                  context.t(
+                                    'I already have an account',
+                                    'J’ai déjà un compte',
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      He.sans(
+                                        15,
+                                        weight: FontWeight.w600,
+                                        color: He.ink,
+                                      ).copyWith(
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: He.ink,
+                                        decorationThickness: 1.2,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'ALVI INTELLECTS INC. · ONTARIO',
+                              textAlign: TextAlign.center,
+                              style: He.eyebrow(
+                                size: 11.5,
+                              ).copyWith(color: He.ink2, letterSpacing: 1.4),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'ALVI INTELLECTS INC. · ONTARIO',
-                    textAlign: TextAlign.center,
-                    style: He.eyebrow(
-                      size: 11.5,
-                    ).copyWith(color: He.ink2, letterSpacing: 1.4),
-                  ),
-                ],
+                ),
               ),
-              const SizedBox(height: 16),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
@@ -237,7 +246,6 @@ class LanguageStep extends StatelessWidget {
   }
 }
 
-
 class AccountStep extends StatelessWidget {
   const AccountStep({super.key});
 
@@ -267,9 +275,7 @@ class AccountStep extends StatelessWidget {
           decoration: BoxDecoration(
             color: filled ? He.ink : Colors.transparent,
             borderRadius: BorderRadius.circular(40),
-            border: Border.all(
-              color: filled ? He.ink : He.hairline,
-            ),
+            border: Border.all(color: filled ? He.ink : He.hairline),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -294,10 +300,7 @@ class AccountStep extends StatelessWidget {
       step: 2,
       total: 8,
       eyebrow: 'ACCOUNT',
-      title: context.t(
-        'Create your account.',
-        'Créez votre compte.',
-      ),
+      title: context.t('Create your account.', 'Créez votre compte.'),
       subtitle: context.t(
         'It keeps your baselines safe, so a new phone or a new band never starts you from zero.',
         'Vos données de référence restent protégées : un nouveau téléphone ou bracelet ne vous fera jamais repartir de zéro.',
@@ -323,11 +326,7 @@ class AccountStep extends StatelessWidget {
         children: [
           accountButton(
             label: context.t('Continue with Apple', 'Continuer avec Apple'),
-            icon: const Icon(
-              Icons.apple,
-              color: Colors.white,
-              size: 23,
-            ),
+            icon: const Icon(Icons.apple, color: Colors.white, size: 23),
             filled: true,
             onTap: () => unavailable('Apple'),
           ),

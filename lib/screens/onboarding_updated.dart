@@ -350,6 +350,15 @@ class AccountStep extends StatelessWidget {
             icon: Icon(Icons.mail_outline, color: He.ink, size: 21),
             onTap: () => unavailable('Email'),
           ),
+          const SizedBox(height: 10),
+          accountButton(
+            label: context.t(
+              'Continue without signing in',
+              'Continuer sans compte',
+            ),
+            icon: Icon(Icons.arrow_forward_rounded, color: He.ink, size: 21),
+            onTap: () => _push(context, const PrivacyStep()),
+          ),
           const SizedBox(height: 14),
           Text(
             context.t(

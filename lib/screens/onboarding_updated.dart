@@ -49,106 +49,102 @@ class WelcomeScreen extends StatelessWidget {
             return SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: He.gutter),
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [lang('EN', false), lang('FR', true)],
-                          ),
-                        ),
-                        const Spacer(),
-                        const Ripples(size: 300, child: AlviMark(width: 150)),
-                        const Spacer(),
-                        Text(
-                          context.t(
-                            'Wear less.\nKnow more.',
-                            'Portez moins.\nSachez plus.',
-                          ),
-                          textAlign: TextAlign.center,
-                          style: He.headline(46),
-                        ),
-                        const SizedBox(height: 22),
-                        for (final line in [
-                          context.t('Nothing to look at.', 'Rien à regarder.'),
-                          context.t(
-                            'A touch when it matters True.',
-                            'Une touche quand ça compte.',
-                          ),
-                          context.t(
-                            'A morning brief that reads your night.',
-                            'Un bilan matinal qui lit votre nuit.',
-                          ),
-                        ])
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              line,
-                              textAlign: TextAlign.center,
-                              style: He.body(18),
-                            ),
-                          ),
-                        const Spacer(),
-                        PillButton(
-                          context.t('Get started', 'Commencer'),
-                          onTap: () => _push(context, const LanguageStep()),
-                        ),
-                        const SizedBox(height: 14),
-                        Column(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: He.gutter),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
-                            GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: () {
-                                toast(
-                                  context,
-                                  context.t(
-                                    'Account sign-in is not available yet.',
-                                    'La connexion au compte n’est pas encore disponible.',
-                                  ),
-                                );
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 6,
+                          children: [lang('EN', false), lang('FR', true)],
+                        ),
+                      ),
+                      const Ripples(size: 300, child: AlviMark(width: 150)),
+                      Text(
+                        context.t(
+                          'Wear less.\nKnow more.',
+                          'Portez moins.\nSachez plus.',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: He.headline(46),
+                      ),
+                      const SizedBox(height: 22),
+                      for (final line in [
+                        context.t('Nothing to look at.', 'Rien à regarder.'),
+                        context.t(
+                          'A touch when it matters True.',
+                          'Une touche quand ça compte.',
+                        ),
+                        context.t(
+                          'A morning brief that reads your night.',
+                          'Un bilan matinal qui lit votre nuit.',
+                        ),
+                      ])
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            line,
+                            textAlign: TextAlign.center,
+                            style: He.body(18),
+                          ),
+                        ),
+                      PillButton(
+                        context.t('Get started', 'Commencer'),
+                        onTap: () => _push(context, const LanguageStep()),
+                      ),
+                      const SizedBox(height: 14),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              toast(
+                                context,
+                                context.t(
+                                  'Account sign-in is not available yet.',
+                                  'La connexion au compte n’est pas encore disponible.',
                                 ),
-                                child: Text(
-                                  context.t(
-                                    'I already have an account',
-                                    'J’ai déjà un compte',
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  style:
-                                      He.sans(
-                                        15,
-                                        weight: FontWeight.w600,
-                                        color: He.ink,
-                                      ).copyWith(
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: He.ink,
-                                        decorationThickness: 1.2,
-                                      ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              child: Text(
+                                context.t(
+                                  'I already have an account',
+                                  'J’ai déjà un compte',
                                 ),
+                                textAlign: TextAlign.center,
+                                style:
+                                    He.sans(
+                                      15,
+                                      weight: FontWeight.w600,
+                                      color: He.ink,
+                                    ).copyWith(
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: He.ink,
+                                      decorationThickness: 1.2,
+                                    ),
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              'ALVI INTELLECTS INC. · ONTARIO',
-                              textAlign: TextAlign.center,
-                              style: He.eyebrow(
-                                size: 11.5,
-                              ).copyWith(color: He.ink2, letterSpacing: 1.4),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'ALVI INTELLECTS INC. · ONTARIO',
+                            textAlign: TextAlign.center,
+                            style: He.eyebrow(
+                              size: 11.5,
+                            ).copyWith(color: He.ink2, letterSpacing: 1.4),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
                 ),
               ),
